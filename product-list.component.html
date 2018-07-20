@@ -1,0 +1,69 @@
+<div class='panel panel-primary'>
+    <div class='panel-heading'>
+        {{pageTitle | uppercase}}
+    </div>
+    <div class='panel-body'>
+        <div class='row'>
+            <div class='col-md-2'>Filter by:</div>
+            <div class='col-md-4'>
+                <input type='text' />
+            </div>
+        </div>
+        <div class='table-responsive'>
+            <input type="text" [(ngModel)]='listFilter'/>
+            You type:{{listFilter}}  <!--this is just the proof that 2 way binding is happening as we are sending
+                the text box data from html to object and again by interpolation retrieving the data-->
+            <input type="text" [(ngModel)]='listFilter'/>
+<!--*ngIf and *ngFor are called structure element as they do DOM manupilation and they are prefixed by * symbol-->
+            <table class='table' *ngIf='products && products.length'> <!--by writing *ngIf='product && products.length' --> 
+                <thead>                     <!--it will only display table only if there is data in products array and have product array-->
+                    <tr>
+                        <th>
+                            <button class='btn btn-primary'>Filter by</button>
+                        </th>
+<!--here we are adding a button which will show the image by calling the function by using click attribute and used interpolation for displaying the name of the button this is event binding-->                        
+                        <th>
+                            <button class='btn btn-primary' (click)='toggleImage()'>{{showImage?'HIDE ':'SHOW '}}Image</button>
+                        </th>
+            
+                        <th>Product</th>
+                        <th>Code</th>
+                        <th>Available</th>
+                        <th>Price</th>
+                        <th>5 Star Rating</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!--<tr>
+                        <td><img src='{{products[0].imageUrl}}' width='40px' height='40px' /></td>
+                        <td>{{products[0].productName}}</td>
+                        <td>{{products[0].productCode}}</td>
+                        <td>{{products[0].releaseDate}}</td>
+                        <td>{{products[0].price}}</td>
+                        <td>{{products[0].starRating}}</td>
+                    </tr>
+                    <tr>
+                        <td><img src='{{products[1].imageUrl}}' width='40px' height='40px' /></td>
+                        <td>{{products[1].productName}}</td>
+                        <td>{{products[1].productCode}}</td>
+                        <td>{{products[1].releaseDate}}</td>
+                        <td>{{products[1].price}}</td>
+                        <td>{{products[1].starRating}}</td>
+                    </tr>-->
+<!--as we can have a huge data so typing all the index will be messy so we can use *ngFor='#product of products'
+which will iterate at the end of the data and also the img will be provide using property binding i.e assigning 
+image url to the attribute of the html tag same for title attribute this is called property binding -->
+                    <tr *ngFor='#product of products | productFilter:listFilter'>  
+                        <td></td>
+                        <td><img [src]='product.imageUrl' [title]='product.productName' alt='Image Here' [style.width.px]='imageWidth' [style.margin.px]='imageMargin' *ngIf='showImage' /></td>
+                        <td>{{product.productName}}</td>
+                        <td>{{product.productCode | lowercase}}</td>  <!--converting code to lowercase just using pipe symbole and writing lowercase--> 
+                        <td>{{product.releaseDate}}</td>
+                        <td>{{product.price | currency:'INR':true:'1.2-2'}}</td><!--displaying the currency in front of price and 1.2-2 means min and max digits after decimal(2-2)nad no of trailing zeros(1)-->
+                        <td>{{product.starRating}}<ai-star [rating]='product.starRating' (ratingClicked)='onRatingClicked($event)'></ai-star></td> <!--adding star component and sending rating of the star-->
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
